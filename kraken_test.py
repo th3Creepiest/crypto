@@ -11,8 +11,8 @@ class TestGetSystemStatus:
     URL = "https://api.kraken.com/0/public/SystemStatus"
 
     def test_get_system_status_success(self, requests_mock):
-        requests_mock.get(self.URL, json={})
-        assert get_system_status() == {}
+        requests_mock.get(self.URL, json={"error": [], "result": {"status": "online", "timestamp": "2025-03-28T18:30:07Z"}})
+        assert get_system_status() == {"error": [], "result": {"status": "online", "timestamp": "2025-03-28T18:30:07Z"}}
         assert requests_mock.called_once
         assert requests_mock.last_request.url == self.URL
         assert requests_mock.last_request.method == "GET"
@@ -41,8 +41,8 @@ class TestGetServerTime:
     URL = "https://api.kraken.com/0/public/Time"
 
     def test_get_server_time_success(self, requests_mock):
-        requests_mock.get(self.URL, json={"serverTime": 1499827319559})
-        assert get_server_time() == {"serverTime": 1499827319559}
+        requests_mock.get(self.URL, json={"error": [], "result": {"unixtime": 1743186641, "rfc1123": "Fri, 28 Mar 25 18:30:41 +0000"}})
+        assert get_server_time() == {"error": [], "result": {"unixtime": 1743186641, "rfc1123": "Fri, 28 Mar 25 18:30:41 +0000"}}
         assert requests_mock.called_once
         assert requests_mock.last_request.url == self.URL
         assert requests_mock.last_request.method == "GET"
