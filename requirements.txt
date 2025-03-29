@@ -1,7 +1,10 @@
+ipykernel
+mplfinance
 numpy
 pandas
 pytest
 python-dotenv
 requests
 requests-mock
+ta
 websockets
