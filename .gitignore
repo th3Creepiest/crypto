@@ -4,3 +4,5 @@ __pycache__/
 .vscode/
 .env
 .windsurfrules
+cache/info/
+cache/klines/*.csv
