@@ -1,4 +1,5 @@
 ipykernel
+ipywidgets
 mplfinance
 numpy
 pandas
@@ -7,4 +8,8 @@ python-dotenv
 requests
 requests-mock
 ta
+torch
+tradingview_ta
+transformers
 websockets
+yfinance
