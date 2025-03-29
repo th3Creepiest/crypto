@@ -1,6 +1,7 @@
 numpy
 pandas
 pytest
+python-dotenv
 requests
 requests-mock
 websockets
