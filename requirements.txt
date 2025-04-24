@@ -4,6 +4,7 @@ mplfinance
 numpy
 pandas
 pytest
+python-binance
 python-dotenv
 requests
 requests-mock
