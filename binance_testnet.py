@@ -41,7 +41,7 @@ def calculate_sell_price(current_price: float) -> float:
 
 def run_simple_bot():
     base_currency = "BTC"
-    quote_currency = "USDT"
+    quote_currency = "EUR"
     symbol = base_currency + quote_currency
     current_price: float | None = get_current_price(symbol)
     buy_price_threshold = calculate_buy_price(current_price)
@@ -75,6 +75,10 @@ def run_simple_bot():
             )
             place_sell_order(symbol, trade_quantity)
             print_account_balances([base_currency, quote_currency])
+            buy_price_threshold = calculate_buy_price(current_price)
+            sell_price_threshold = calculate_sell_price(current_price)
+            print(f"New buy price threshold: {buy_price_threshold}")
+            print(f"New sell price threshold: {sell_price_threshold}")
             in_position = False
 
         current_price = None
