@@ -9,11 +9,11 @@ API_SECRET = config["BINANCE_TESTNET_API_SECRET"]
 CLIENT = Client(API_KEY, API_SECRET, testnet=True)
 
 
-def print_account_balances():
+def print_account_balances(coins: list[str]):
     account = CLIENT.get_account()
     balances = {item["asset"]: item for item in account["balances"]}
-    print("account:", balances["BTC"])
-    print("account:", balances["USDT"])
+    for coin in coins:
+        print("account balance:", balances[coin])
 
 
 def get_current_price(symbol: str) -> float:
@@ -31,33 +31,55 @@ def place_sell_order(symbol: str, quantity: float):
     print(f"Sell order placed: {order}")
 
 
-def trading_bot():
-    symbol = "BTCUSDT"
-    buy_price_threshold = 60000
-    sell_price_threshold = 65000
+def calculate_buy_price(current_price: float) -> float:
+    return current_price - 1000
+
+
+def calculate_sell_price(current_price: float) -> float:
+    return current_price + 1000
+
+
+def run_simple_bot():
+    base_currency = "BTC"
+    quote_currency = "USDT"
+    symbol = base_currency + quote_currency
+    current_price: float | None = get_current_price(symbol)
+    buy_price_threshold = calculate_buy_price(current_price)
+    sell_price_threshold = calculate_sell_price(current_price)
     trade_quantity = 0.001
     in_position = False
 
-    print_account_balances()
+    print(symbol)
+    print(f"Current price: {current_price}")
+    print(f"Buy price threshold: {buy_price_threshold}")
+    print(f"Sell price threshold: {sell_price_threshold}")
+    print_account_balances([base_currency, quote_currency])
 
     while True:
-        current_price = get_current_price(symbol)
-        print(f"Current price: {current_price}")
+
+        if not current_price:
+            current_price = get_current_price(symbol)
+            print(f"Current price: {current_price}")
 
         if not in_position and current_price < buy_price_threshold:
-            print(f"Price is below buy threshold ({buy_price_threshold}), placing buy order...")
+            print(
+                f"Price is below buy threshold ({buy_price_threshold}), placing buy order..."
+            )
             place_buy_order(symbol, trade_quantity)
-            print_account_balances()
+            print_account_balances([base_currency, quote_currency])
             in_position = True
 
         elif in_position and current_price > sell_price_threshold:
-            print(f"Price is above sell threshold ({sell_price_threshold}), placing sell order...")
+            print(
+                f"Price is above sell threshold ({sell_price_threshold}), placing sell order..."
+            )
             place_sell_order(symbol, trade_quantity)
-            print_account_balances()
+            print_account_balances([base_currency, quote_currency])
             in_position = False
 
+        current_price = None
         time.sleep(60)
 
 
 if __name__ == "__main__":
-    trading_bot()
+    run_simple_bot()
