@@ -1,7 +1,7 @@
 import pytest
 from requests import HTTPError
 
-from kraken_api import (
+from api.kraken_api import (
     get_system_status,
     get_server_time,
     get_asset_info,
@@ -14,15 +14,29 @@ from kraken_api import (
 )
 
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36", "Accept-Encoding": "gzip, deflate", "Accept": "application/json", "Connection": "keep-alive"}
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept": "application/json",
+    "Connection": "keep-alive",
+}
 
 
 class TestGetSystemStatus:
     URL = "https://api.kraken.com/0/public/SystemStatus"
 
     def test_get_system_status_success(self, requests_mock):
-        requests_mock.get(self.URL, json={"error": [], "result": {"status": "online", "timestamp": "2025-03-28T18:30:07Z"}})
-        assert get_system_status() == {"error": [], "result": {"status": "online", "timestamp": "2025-03-28T18:30:07Z"}}
+        requests_mock.get(
+            self.URL,
+            json={
+                "error": [],
+                "result": {"status": "online", "timestamp": "2025-03-28T18:30:07Z"},
+            },
+        )
+        assert get_system_status() == {
+            "error": [],
+            "result": {"status": "online", "timestamp": "2025-03-28T18:30:07Z"},
+        }
         assert requests_mock.called_once
         assert requests_mock.last_request.url == self.URL
         assert requests_mock.last_request.method == "GET"
@@ -51,8 +65,23 @@ class TestGetServerTime:
     URL = "https://api.kraken.com/0/public/Time"
 
     def test_get_server_time_success(self, requests_mock):
-        requests_mock.get(self.URL, json={"error": [], "result": {"unixtime": 1743186641, "rfc1123": "Fri, 28 Mar 25 18:30:41 +0000"}})
-        assert get_server_time() == {"error": [], "result": {"unixtime": 1743186641, "rfc1123": "Fri, 28 Mar 25 18:30:41 +0000"}}
+        requests_mock.get(
+            self.URL,
+            json={
+                "error": [],
+                "result": {
+                    "unixtime": 1743186641,
+                    "rfc1123": "Fri, 28 Mar 25 18:30:41 +0000",
+                },
+            },
+        )
+        assert get_server_time() == {
+            "error": [],
+            "result": {
+                "unixtime": 1743186641,
+                "rfc1123": "Fri, 28 Mar 25 18:30:41 +0000",
+            },
+        }
         assert requests_mock.called_once
         assert requests_mock.last_request.url == self.URL
         assert requests_mock.last_request.method == "GET"
@@ -214,7 +243,9 @@ class TestGetOhlcData:
         requests_mock.get(self.URL, json={})
         assert get_ohlc_data(pair="BTC/USD") == {}
         assert requests_mock.called_once
-        assert requests_mock.last_request.url == self.URL + "?pair=BTC%2FUSD&interval=60"
+        assert (
+            requests_mock.last_request.url == self.URL + "?pair=BTC%2FUSD&interval=60"
+        )
         assert requests_mock.last_request.method == "GET"
         assert requests_mock.last_request.headers == HEADERS
 
@@ -282,7 +313,10 @@ class TestGetRecentTrades:
         requests_mock.get(self.URL, json={})
         assert get_recent_trades(pair="BTC/USD", since=1616663618) == {}
         assert requests_mock.called_once
-        assert requests_mock.last_request.url == self.URL + "?pair=BTC%2FUSD&count=1000&since=1616663618"
+        assert (
+            requests_mock.last_request.url
+            == self.URL + "?pair=BTC%2FUSD&count=1000&since=1616663618"
+        )
         assert requests_mock.last_request.method == "GET"
         assert requests_mock.last_request.headers == HEADERS
 
@@ -320,7 +354,10 @@ class TestGetRecentSpreads:
         requests_mock.get(self.URL, json={})
         assert get_recent_spreads(pair="BTC/USD", since=1616663618) == {}
         assert requests_mock.called_once
-        assert requests_mock.last_request.url == self.URL + "?pair=BTC%2FUSD&since=1616663618"
+        assert (
+            requests_mock.last_request.url
+            == self.URL + "?pair=BTC%2FUSD&since=1616663618"
+        )
         assert requests_mock.last_request.method == "GET"
         assert requests_mock.last_request.headers == HEADERS
 

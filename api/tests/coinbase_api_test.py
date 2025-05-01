@@ -1,7 +1,7 @@
 import pytest
 from requests import HTTPError
 
-from coinbase_api import (
+from api.coinbase_api import (
     get_server_time,
     list_currencies,
     get_currency,
@@ -16,15 +16,25 @@ from coinbase_api import (
 )
 
 
-HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36", "Accept-Encoding": "gzip, deflate", "Accept": "application/json", "Connection": "keep-alive"}
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept": "application/json",
+    "Connection": "keep-alive",
+}
 
 
 class TestGetServerTime:
     URL = "https://api.coinbase.com/v2/time"
 
     def test_get_server_time_success(self, requests_mock):
-        requests_mock.get(self.URL, json={"data": {"iso": "2022-01-01T00:00:00Z", "epoch": 1640995200}})
-        assert get_server_time() == {"data": {"iso": "2022-01-01T00:00:00Z", "epoch": 1640995200}}
+        requests_mock.get(
+            self.URL,
+            json={"data": {"iso": "2022-01-01T00:00:00Z", "epoch": 1640995200}},
+        )
+        assert get_server_time() == {
+            "data": {"iso": "2022-01-01T00:00:00Z", "epoch": 1640995200}
+        }
         assert requests_mock.called_once
         assert requests_mock.last_request.url == self.URL
         assert requests_mock.last_request.method == "GET"
@@ -244,7 +254,10 @@ class TestGetProductCandles:
         requests_mock.get(self.URL + "/BTC-USD/candles", json={})
         assert get_product_candles("BTC-USD", granularity=60) == {}
         assert requests_mock.called_once
-        assert requests_mock.last_request.url == self.URL + "/BTC-USD/candles?granularity=60"
+        assert (
+            requests_mock.last_request.url
+            == self.URL + "/BTC-USD/candles?granularity=60"
+        )
         assert requests_mock.last_request.method == "GET"
         assert requests_mock.last_request.headers == HEADERS
 
@@ -273,7 +286,16 @@ class TestGetProductStats:
     def test_get_product_stats_success(self, requests_mock):
         requests_mock.get(
             self.URL + "/BTC/stats",
-            json={"open": "84927.78", "high": "85562.07", "low": "83217.26", "last": "83233.97", "volume": "8043.06336134", "volume_30day": "336320.45431582", "rfq_volume_24hour": "40.724795", "rfq_volume_30day": "3146.264482"},
+            json={
+                "open": "84927.78",
+                "high": "85562.07",
+                "low": "83217.26",
+                "last": "83233.97",
+                "volume": "8043.06336134",
+                "volume_30day": "336320.45431582",
+                "rfq_volume_24hour": "40.724795",
+                "rfq_volume_30day": "3146.264482",
+            },
         )
         assert get_product_stats("BTC") == {
             "open": "84927.78",
@@ -314,9 +336,28 @@ class TestGetProductTicker:
 
     def test_get_product_ticker_success(self, requests_mock):
         requests_mock.get(
-            self.URL + "/BTC-USD/ticker", json={"ask": "83127.85", "bid": "83127.84", "volume": "8059.69043853", "trade_id": 803279920, "price": "83127.85", "size": "0.00040389", "time": "2025-03-29T10:49:07.210762Z", "rfq_volume": "40.699221"}
+            self.URL + "/BTC-USD/ticker",
+            json={
+                "ask": "83127.85",
+                "bid": "83127.84",
+                "volume": "8059.69043853",
+                "trade_id": 803279920,
+                "price": "83127.85",
+                "size": "0.00040389",
+                "time": "2025-03-29T10:49:07.210762Z",
+                "rfq_volume": "40.699221",
+            },
         )
-        assert get_product_ticker("BTC-USD") == {"ask": "83127.85", "bid": "83127.84", "volume": "8059.69043853", "trade_id": 803279920, "price": "83127.85", "size": "0.00040389", "time": "2025-03-29T10:49:07.210762Z", "rfq_volume": "40.699221"}
+        assert get_product_ticker("BTC-USD") == {
+            "ask": "83127.85",
+            "bid": "83127.84",
+            "volume": "8059.69043853",
+            "trade_id": 803279920,
+            "price": "83127.85",
+            "size": "0.00040389",
+            "time": "2025-03-29T10:49:07.210762Z",
+            "rfq_volume": "40.699221",
+        }
         assert requests_mock.called_once
         assert requests_mock.last_request.url == self.URL + "/BTC-USD/ticker"
         assert requests_mock.last_request.method == "GET"
