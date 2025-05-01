@@ -1,9 +1,8 @@
-.trae/
-.vscode/
-
 __pycache__/
-.pytest_cache/
-.venv/
 .env
+.pytest_cache/
+.trae/
+.venv/
+.vscode/
 cache/info/
 cache/klines/*.csv
