@@ -77,7 +77,7 @@ while True:
     print("cumulative return:", cumulative_return.iloc[-1])
 
     if not in_position:
-        if cumulative_return.iloc[-1] < -0.00225:
+        if cumulative_return.iloc[-1] < -0.002:
             print("Buying assets...")
             order = client.create_order(
                 symbol=SYMBOL,
@@ -117,5 +117,5 @@ while True:
 
     klines = pd.concat([klines, new_klines]).drop_duplicates()
 
-    if len(klines) > 60:
-        klines = klines.iloc[-60:]
+    if len(klines) > 120:
+        klines = klines.iloc[-120:]
